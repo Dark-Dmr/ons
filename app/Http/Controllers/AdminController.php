@@ -2,64 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginAdminRequest;
+use App\Http\Requests\RegisterAdminRequest;
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
+    
+    public function regiser (RegisterAdminRequest $request){
+        $data = $request->validated();
+        $data['password'] = Hash::make($request->password);
+        $admin = Admin::create($data);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $token = $admin->createToken('auth_token')->plainTextToken;
+        //تذكرني لاحقا الميزة الي تحت
+        // $admin->remember_token = $token;
+        // $admin->save();
+    
+        return [
+            'admin' => $admin,
+            'token' => $token
+        ];
     }
+    
+    public function login (LoginAdminRequest $request){
+        $data = $request->validated();
+        $admin = Admin::where('email', $data['email'])->first();
+        if (!$admin || !Hash::check($data['password'], $admin->password)) {
+            return response([
+                'message' => 'Bad creds'
+            ], 401);
+        }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $token = $admin->createToken('auth_token')->plainTextToken;
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Admin $admin)
-    {
-        //
-    }
+        return [
+            'admin' => $admin,
+            'token' => $token
+        ];
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Admin $admin)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Admin $admin)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Admin $admin)
-    {
-        //
     }
 }
