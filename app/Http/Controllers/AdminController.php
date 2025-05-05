@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    
+    public function loginAdminPage()
+    {
+        return view('adminLogin');
+    }
     public function regiser (RegisterAdminRequest $request){
         $data = $request->validated();
         $data['password'] = Hash::make($request->password);
@@ -43,5 +46,15 @@ class AdminController extends Controller
             'token' => $token
         ];
 
+    }
+
+    public function logout(Request $request)
+    {
+        //ماجربته لسه
+        $request->user()->currentAccessToken()->delete();
+    
+        return response()->json([
+            'message' => 'Successfully logged out'
+        ]);
     }
 }

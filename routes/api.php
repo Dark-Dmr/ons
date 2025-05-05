@@ -11,6 +11,8 @@ Route::get('/user', function (Request $request) {
 
 
 Route::post('register',[AdminController::class, 'regiser']);
-Route::post('login',[AdminController::class, 'login']);
-Route::post('logout',[AdminController::class, 'logout']);
+
+// جربتها في الاي بي اي بس حطيتها في الويب لأن الاكسيس بيكون من صفحة بليد
+// Route::post('login',[AdminController::class, 'login']);
+// Route::post('logout',[AdminController::class, 'logout']);
 
