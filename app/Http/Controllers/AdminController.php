@@ -34,9 +34,7 @@ class AdminController extends Controller
         $data = $request->validated();
         $admin = Admin::where('email', $data['email'])->first();
         if (!$admin || !Hash::check($data['password'], $admin->password)) {
-            return response([
-                'message' => 'Bad creds'
-            ], 401);
+            return redirect(route('login.admin.page'))->with("error","Login details are not valid");
         }
 
         $token = $admin->createToken('auth_token')->plainTextToken;
