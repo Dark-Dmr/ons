@@ -12,7 +12,8 @@ class ContentController extends Controller
      */
     public function index()
     {
-        //
+        $content = Content::all();
+        return view('contents.index')->with('contents', $content);
     }
 
     /**
@@ -20,7 +21,7 @@ class ContentController extends Controller
      */
     public function create()
     {
-        //
+        return view('contents.create');
     }
 
     /**
@@ -28,7 +29,16 @@ class ContentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = request()->all();
+
+        $content = new Content();
+        $content->tittle = $data['tittle'];
+        $content->text = $data['text'];
+        $content->save();
+
+        session()->flash('success', 'Content created succesfully');
+
+        return redirect(route('contents.index'));
     }
 
     /**
@@ -44,7 +54,7 @@ class ContentController extends Controller
      */
     public function edit(Content $content)
     {
-        //
+     //we don't need it edit with details in same page
     }
 
     /**
@@ -52,7 +62,16 @@ class ContentController extends Controller
      */
     public function update(Request $request, Content $content)
     {
-        //
+        $data = request()->all();
+
+   
+        $content->tittle = $data['tittle'];
+        $content->text = $data['text'];
+        $content->save();
+
+        session()->flash('success', 'Content updated successfully');
+
+        return redirect(route('contents.index'));
     }
 
     /**
@@ -60,6 +79,15 @@ class ContentController extends Controller
      */
     public function destroy(Content $content)
     {
-        //
+        $content->delete();
+
+        return redirect(route('contents.index'));
+    }
+
+
+    public function details(Content $content){
+
+        return view('contents.details')->with('contents', $content);
+    
     }
 }
