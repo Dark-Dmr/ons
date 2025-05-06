@@ -6,17 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    protected $table = ("categories");
-    protected $primaryKey = ('id');
-    protected $fillable = ('name');
-    public $timestamps;
+    protected $table = "categories";
+    protected $primaryKey = 'id';
+    protected $fillable = ['name'];
+    public $timestamps = true;
 
-
-    public function category_contents(){
+    public function category_contents()
+    {
         return $this->hasMany(CategoryContent::class);
     }
-    public function contents(){
+
+    public function contents()
+    {
         return $this->belongsToMany(Content::class);
     }
-
 }
+

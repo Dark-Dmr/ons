@@ -10,6 +10,9 @@
 <div>
     <a href="{{route('contents.create')}}">Create new content</a>
 </div>
+<div>
+    <a href="{{route('category.index')}}">go to category</a>
+</div>
 <div class="row mt-3">
     <div class="col-12 align-self-center">
         <ul class="list-group">

@@ -12,7 +12,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        
+        $category = Category::all();
+        return view('categories.index')->with('categories', $category);
     }
 
     /**
@@ -20,7 +21,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('categories.create');
     }
 
     /**
@@ -28,7 +29,15 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = request()->all();
+
+        $Category = new Category();
+        $Category->name = $data['name'];
+        $Category->save();
+
+        session()->flash('success', 'Category created succesfully');
+
+        return redirect(route('category.index'));
     }
 
     /**
@@ -52,7 +61,15 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $data = request()->all();
+
+   
+        $category->name = $data['name'];
+        $category->save();
+
+        session()->flash('success', 'Category updated successfully');
+
+        return redirect(route('category.index'));
     }
 
     /**
@@ -60,6 +77,14 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        return redirect(route('category.index'));
+    }
+
+    public function details(Category $category){
+
+        return view('categories.details')->with('categories', $category);
+    
     }
 }

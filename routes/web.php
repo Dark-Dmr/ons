@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContentController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -26,11 +27,21 @@ Route::post('/admin/logout', [AdminController::class, 'logout'])->name('logout.a
 
 
 Route::group(['middleware' => ['auth:admin']], function () {
+
+    //contents
     Route::get('/contents/index',[ContentController::class, 'index'])->name('contents.index');
     Route::get('/contents/create', [ContentController::class, 'create'])->name('contents.create');
     Route::post('store-content', [ContentController::class, 'store'])->name('store.content');
-    Route::get('details/{content}', [ContentController::class, 'details'])->name('content.details');
-    Route::put('update/{content}', [ContentController::class, 'update'])->name('content.update'); 
-    Route::delete('delete/{content}', [ContentController::class, 'destroy'])->name('content.delete'); //not use
+    Route::get('/contents/details/{content}', [ContentController::class, 'details'])->name('content.details');
+    Route::put('contents/update/{content}', [ContentController::class, 'update'])->name('content.update'); 
+    Route::delete('contents/delete/{content}', [ContentController::class, 'destroy'])->name('content.delete');
+
+    //Categories
+    Route::get('/categories/index',[CategoryController::class, 'index'])->name('category.index');
+    Route::get('/categories/create', [categoryController::class, 'create'])->name('category.create');
+    Route::post('store-category', [categoryController::class, 'store'])->name('store.category');
+    Route::get('/categories/details/{category}', [categoryController::class, 'details'])->name('category.details');
+    Route::put('/categories/update/{category}', [categoryController::class, 'update'])->name('category.update'); 
+    Route::delete('/categories/delete/{category}', [categoryController::class, 'destroy'])->name('category.delete');
 });
 
