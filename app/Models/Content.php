@@ -11,10 +11,10 @@ class Content extends Model
      protected $fillable = ['tittle','text'];
      public $timestamps;
 
-     public function category_contents(){
-        return $this->hasMany(CategoryContent::class);
-     }
+   //   public function category_contents(){
+   //      return $this->hasMany(CategoryContent::class);
+   //   }
      public function categories(){
-      return $this->belongsToMany(Category::class);
+      return $this->belongsToMany(Category::class, 'category_contents');
   }
 }

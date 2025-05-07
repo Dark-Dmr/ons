@@ -30,6 +30,20 @@
                 <textarea name="text" class="form-control" rows="4">{{ $contents->text }}</textarea>
             </div>
 
+            <label>Select Categories:</label>
+            <div>
+                @foreach ($categories as $category)
+                    <div>
+                        <label>
+                            <input type="checkbox" name="categories_id[]" value="{{ $category->id }}"
+                                {{ in_array($category->id, $contents->categories->pluck('id')->toArray()) ? 'checked' : '' }}>
+                            {{ $category->name }}
+                        </label>
+                    </div>
+                @endforeach
+            </div>
+
+
             <button type="submit" class="btn btn-success mt-2">Save</button>
             <button type="button" class="btn btn-secondary mt-2" onclick="toggleEdit(false)">Cancel</button>
         </form>

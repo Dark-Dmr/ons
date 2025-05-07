@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Content;
 use Illuminate\Http\Request;
 
@@ -21,7 +22,8 @@ class ContentController extends Controller
      */
     public function create()
     {
-        return view('contents.create');
+        $categories = Category::all();
+        return view('contents.create')->with('categories', $categories);;
     }
 
     /**
@@ -29,12 +31,14 @@ class ContentController extends Controller
      */
     public function store(Request $request)
     {
+
         $data = request()->all();
 
         $content = new Content();
         $content->tittle = $data['tittle'];
         $content->text = $data['text'];
         $content->save();
+        $content->categories()->attach($request->categories_id);
 
         session()->flash('success', 'Content created succesfully');
 
@@ -62,12 +66,16 @@ class ContentController extends Controller
      */
     public function update(Request $request, Content $content)
     {
-        $data = request()->all();
+        $data = $request->all();
 
-   
-        $content->tittle = $data['tittle'];
+        $content->tittle = $data['tittle']; // Change to 'title' if corrected
         $content->text = $data['text'];
         $content->save();
+
+        // Only sync if categories_id is provided
+        if ($request->has('categories_id')) {
+            $content->categories()->sync($request->categories_id);
+        }
 
         session()->flash('success', 'Content updated successfully');
 
@@ -85,9 +93,13 @@ class ContentController extends Controller
     }
 
 
-    public function details(Content $content){
-
-        return view('contents.details')->with('contents', $content);
+    public function details(Content $content) {
+        $categories = Category::all();
     
+        return view('contents.details', [
+            'contents' => $content,
+            'categories' => $categories,
+        ]);
     }
+    
 }

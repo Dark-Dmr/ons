@@ -11,14 +11,14 @@ class Category extends Model
     protected $fillable = ['name'];
     public $timestamps = true;
 
-    public function category_contents()
-    {
-        return $this->hasMany(CategoryContent::class);
-    }
+    // public function category_contents()
+    // {
+    //     return $this->hasMany(CategoryContent::class);
+    // }
 
     public function contents()
     {
-        return $this->belongsToMany(Content::class);
+        return $this->belongsToMany(Content::class, 'category_contents');
     }
 }
 
