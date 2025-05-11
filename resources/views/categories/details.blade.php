@@ -1,38 +1,64 @@
-<div class="container">
-    <h2>Category Details</h2>
+@extends('layouts.admin')
 
-    {{-- Display Mode --}}
-    <div id="view-mode">
-        <h4>name: {{ $categories->name }}</h4>
+@section('title', 'Category Details')
 
-        <button class="btn btn-warning" onclick="toggleEdit(true)">Edit</button>
-        <form action="{{ route('category.delete', $categories->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this content?');">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger mt-3">Delete</button>
-        </form>
+@section('content')
+<div class="card shadow">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Category Details</h5>
     </div>
-
-    {{-- Edit Form (hidden by default) --}}
-    <div id="edit-mode" style="display: none;">
-        <form method="POST" action="{{ route('category.update', $categories->id) }}">
-            @csrf
-            @method('PUT')
-
-            <div class="form-group">
-                <label>name</label>
-                <input type="text" name="name" value="{{ $categories->name }}" class="form-control">
+    
+    <div class="card-body">
+        <!-- View Mode -->
+        <div id="view-mode">
+            <h3>{{ $categories->name }}</h3>
+            <hr>
+            
+            <div class="d-flex gap-2">
+                <button class="btn btn-warning" onclick="toggleEdit(true)">
+                    <i class="fas fa-edit me-2"></i> Edit
+                </button>
+                <form action="{{ route('category.delete', $categories->id) }}" method="POST" 
+                    data-confirm="Are you sure you want to delete this category?">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i> Delete
+                    </button>
+                </form>
             </div>
+        </div>
+        
+        <!-- Edit Mode -->
+        <div id="edit-mode" style="display: none;">
+            <form method="POST" action="{{ route('category.update', $categories->id) }}">
+                @csrf
+                @method('PUT')
 
-            <button type="submit" class="btn btn-success mt-2">Save</button>
-            <button type="button" class="btn btn-secondary mt-2" onclick="toggleEdit(false)">Cancel</button>
-        </form>
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <input type="text" name="name" value="{{ $categories->name }}" class="form-control" required>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-2"></i> Save Changes
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleEdit(false)">
+                        <i class="fas fa-times me-2"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
+@push('scripts')
 <script>
     function toggleEdit(show) {
         document.getElementById('view-mode').style.display = show ? 'none' : 'block';
         document.getElementById('edit-mode').style.display = show ? 'block' : 'none';
     }
 </script>
+@endpush
+@endsection

@@ -1,29 +1,34 @@
-<form action="{{ route('logout.admin') }}" method="POST">
-    @csrf
-    <button type="submit" class="btn btn-danger">Logout</button>
-</form>
-<div class="container text-center">
-    <div class="username-container">
-        <h2 class="username-typing">Weclcom, {{auth('admin')->user()->name}}
-        </h2>
+@extends('layouts.admin')
+
+@section('title', 'Contents Management')
+
+@section('content')
+<div class="card shadow">
+    <div class="card-header bg-primary text-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Contents Management</h5>
+            <a href="{{ route('contents.create') }}" class="btn btn-light">
+                <i class="fas fa-plus me-2"></i> Create New
+            </a>
+        </div>
     </div>
-<div>
-    <a href="{{route('contents.create')}}">Create new content</a>
-</div>
-<div>
-    <a href="{{route('category.index')}}">go to category</a>
-</div>
-<div class="row mt-3">
-    <div class="col-12 align-self-center">
-        <ul class="list-group">
+    
+    <div class="card-body">
+        <div class="list-group">
             @foreach($contents as $content)
-            <li class="list-group-item">
-                <a href="{{ route('content.details', [$content->id]) }}" style="color: cornflowerblue">
-                    {{ $content->tittle }}
-                </a>
-            </li>
+            <a href="{{ route('content.details', $content->id) }}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ $content->tittle ?? 'No Title' }}</h5>
+                    @if($content->created_at)
+                        <small>{{ $content->created_at->diffForHumans() }}</small>
+                    @else
+                        <small>No date</small>
+                    @endif
+                </div>
+                <p class="mb-1">{{ Str::limit($content->text ?? 'No content', 100) }}</p>
+            </a>
             @endforeach
-        </ul>
+        </div>
     </div>
 </div>
-</div>
+@endsection

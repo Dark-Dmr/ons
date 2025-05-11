@@ -13,7 +13,7 @@ class AdminController extends Controller
 {
     public function loginAdminPage()
     {
-        return view('adminLogin');
+        return view('auth.adminLogin');
     }
     public function regiser (RegisterAdminRequest $request){
         $data = $request->validated();
