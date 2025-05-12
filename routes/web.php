@@ -43,8 +43,9 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/categories/details/{category}', [categoryController::class, 'details'])->name('category.details');
     Route::put('/categories/update/{category}', [categoryController::class, 'update'])->name('category.update'); 
     Route::delete('/categories/delete/{category}', [categoryController::class, 'destroy'])->name('category.delete');
+//    //Docx to Json
+    Route::get('/upload', [DocxToJsonController::class, 'showForm']);
+    Route::post('/upload', [DocxToJsonController::class, 'convert']);
+ 
 });
 
-// ask about wether i should put it in the web or api + would it be better if i included it in the "auth:admin" middleware 
-Route::get('/upload', [DocxToJsonController::class, 'showForm']);
-Route::post('/upload', [DocxToJsonController::class, 'convert']);
