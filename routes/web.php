@@ -22,6 +22,9 @@ require __DIR__.'/auth.php';
 
 //بداية الويب اي بي اي
 Route::get('admin/login',[AdminController::class, 'loginAdminPage'])->name('login.admin.page');
+Route::get('/', function () {
+    return redirect()->route('login.admin.page');
+});
 Route::post('admin/login',[AdminController::class, 'login'])->name('login.admin');
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('logout.admin');
 
