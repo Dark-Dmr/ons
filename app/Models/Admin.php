@@ -23,3 +23,5 @@ class Admin extends Authenticatable
     ];
     protected $table = 'admins';
 }
+
+

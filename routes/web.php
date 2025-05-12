@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContentController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\DocxToJsonController; 
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -35,7 +36,6 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/contents/details/{content}', [ContentController::class, 'details'])->name('content.details');
     Route::put('contents/update/{content}', [ContentController::class, 'update'])->name('content.update'); 
     Route::delete('contents/delete/{content}', [ContentController::class, 'destroy'])->name('content.delete');
-
     //Categories
     Route::get('/categories/index',[CategoryController::class, 'index'])->name('category.index');
     Route::get('/categories/create', [categoryController::class, 'create'])->name('category.create');
@@ -45,3 +45,6 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::delete('/categories/delete/{category}', [categoryController::class, 'destroy'])->name('category.delete');
 });
 
+// ask about wether i should put it in the web or api + would it be better if i included it in the "auth:admin" middleware 
+Route::get('/upload', [DocxToJsonController::class, 'showForm']);
+Route::post('/upload', [DocxToJsonController::class, 'convert']);
