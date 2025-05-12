@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('contents', function (Blueprint $table) {
             $table->id();
             $table->string('tittle'); //ask abt whether its okay or nah to add type as tittle & ask abt text type too
-            $table->text('text'); 
+            $table->json('text'); 
             $table->timestamps();
         });
     }
