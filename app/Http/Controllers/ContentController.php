@@ -22,8 +22,9 @@ class ContentController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
-        return view('contents.create')->with('categories', $categories);;
+        // $categories = Category::all();
+        // return view('contents.create')->with('categories', $categories);
+        return view('contents.create');
     }
 
     /**
@@ -31,16 +32,17 @@ class ContentController extends Controller
      */
     public function store(Request $request)
     {
-
-        $data = request()->all();
+        $data = $request->all();
 
         $content = new Content();
         $content->tittle = $data['tittle'];
-        $content->text = $data['text'];
-        $content->save();
-        $content->categories()->attach($request->categories_id);
 
-        session()->flash('success', 'Content created succesfully');
+        // Encode 'text' as JSON string
+        $content->text = json_encode($data['text'], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+        $content->save();
+
+        session()->flash('success', 'Content created successfully');
 
         return redirect(route('contents.index'));
     }
@@ -68,19 +70,18 @@ class ContentController extends Controller
     {
         $data = $request->all();
 
-        $content->tittle = $data['tittle']; // Change to 'title' if corrected
-        $content->text = $data['text'];
-        $content->save();
+        $content->tittle = $data['tittle']; // Or 'title' if that's the correct spelling
 
-        // Only sync if categories_id is provided
-        if ($request->has('categories_id')) {
-            $content->categories()->sync($request->categories_id);
-        }
+        // Encode the text as JSON
+        $content->text = json_encode($data['text'], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+        $content->save();
 
         session()->flash('success', 'Content updated successfully');
 
         return redirect(route('contents.index'));
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -94,12 +95,15 @@ class ContentController extends Controller
 
 
     public function details(Content $content) {
-        $categories = Category::all();
+        // $categories = Category::all();
     
-        return view('contents.details', [
-            'contents' => $content,
-            'categories' => $categories,
-        ]);
+        // return view('contents.details', [
+        //     'contents' => $content,
+        //     // 'categories' => $categories,
+        // ]);
+
+         return view('contents.details')->with('contents', $content);
+
     }
     
 }

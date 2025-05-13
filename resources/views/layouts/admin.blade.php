@@ -103,6 +103,47 @@
             transform: translateX(5px);
         }
         
+        /* Modal Custom Styling */
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .modal-header {
+            border-bottom: none;
+            padding: 20px 30px;
+        }
+        
+        .modal-body {
+            padding: 20px 30px;
+        }
+        
+        .modal-footer {
+            border-top: none;
+            padding: 15px 30px 25px;
+        }
+        
+        .option-card {
+            border: 2px solid #eee;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option-card:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(44, 95, 168, 0.05);
+        }
+        
+        .option-card i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
         @media (max-width: 992px) {
             .sidebar {
                 margin-right: -280px;
@@ -135,33 +176,7 @@
     @stack('styles')
 </head>
 <body>
-    <div class="sidebar">
-        <div class="sidebar-header text-center py-4">
-            <img src="http://localhost/ans/resources/public/images/logo.png" alt="Islamic App Logo1" class="img-fluid" style="max-height: 50px;">
-            <h4 class="mt-3 mb-0">أنس</h4>
-        </div>
-        
-        <ul class="nav flex-column mt-3">
-            <li class="nav-item">
-                <a href="{{ route('contents.index') }}" class="nav-link {{ request()->routeIs('contents.*') ? 'active' : '' }}">
-                    <i class="fas fa-book-quran me-2"></i> Islamic Contents
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('category.index') }}" class="nav-link {{ request()->routeIs('category.*') ? 'active' : '' }}">
-                    <i class="fas fa-tags me-2"></i> Categories
-                </a>
-            </li>
-            <li class="nav-item mt-4">
-                <form action="{{ route('logout.admin') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="nav-link btn btn-link text-start w-100">
-                        <i class="fas fa-sign-out-alt me-2"></i> Logout
-                    </button>
-                </form>
-            </li>
-        </ul>
-    </div>
+    @include('partials.sidebar')
     
     <div class="main-content">
         @include('partials.header')
@@ -172,6 +187,8 @@
     </div>
     
     <div class="overlay"></div>
+    
+    <!-- jQuery already included in scripts partial -->
     
     @include('partials.scripts')
     @stack('scripts')

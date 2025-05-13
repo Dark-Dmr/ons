@@ -39,16 +39,11 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/contents/details/{content}', [ContentController::class, 'details'])->name('content.details');
     Route::put('contents/update/{content}', [ContentController::class, 'update'])->name('content.update'); 
     Route::delete('contents/delete/{content}', [ContentController::class, 'destroy'])->name('content.delete');
-    //Categories
-    Route::get('/categories/index',[CategoryController::class, 'index'])->name('category.index');
-    Route::get('/categories/create', [categoryController::class, 'create'])->name('category.create');
-    Route::post('store-category', [categoryController::class, 'store'])->name('store.category');
-    Route::get('/categories/details/{category}', [categoryController::class, 'details'])->name('category.details');
-    Route::put('/categories/update/{category}', [categoryController::class, 'update'])->name('category.update'); 
-    Route::delete('/categories/delete/{category}', [categoryController::class, 'destroy'])->name('category.delete');
+
+    
     //Docx to Json
-    Route::get('/upload', [DocxToJsonController::class, 'showForm']);
-    Route::post('/upload', [DocxToJsonController::class, 'convert']);
+    Route::get('categories/upload', [DocxToJsonController::class, 'showForm'])->name('upload.showForm');
+    Route::post('categories/upload', [DocxToJsonController::class, 'convert'])->name('upload.convert');
  
 });
 

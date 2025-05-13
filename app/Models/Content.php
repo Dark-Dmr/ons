@@ -9,12 +9,12 @@ class Content extends Model
      protected $table = 'contents';
      protected $primaryKey = 'id';
      protected $fillable = ['tittle','text'];
-     public $timestamps;
+     public $timestamps = true;
 
    //   public function category_contents(){
    //      return $this->hasMany(CategoryContent::class);
    //   }
-     public function categories(){
-      return $this->belongsToMany(Category::class, 'category_contents');
-  }
+  //    public function categories(){
+  //     return $this->belongsToMany(Category::class, 'category_contents');
+  // }
 }

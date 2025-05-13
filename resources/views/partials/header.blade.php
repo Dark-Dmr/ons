@@ -12,7 +12,8 @@
                     </div>
                     <div class="d-none d-md-block">
                         <span class="fw-bold">{{ auth('admin')->user()->name }}</span>
-                        <small class="d-block text-muted">Administrator</small>
+
+                        <small class="d-block text-muted">مدير النظام</small>
                     </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
@@ -20,7 +21,7 @@
                         <form action="{{ route('logout.admin') }}" method="POST">
                             @csrf
                             <button type="submit" class="dropdown-item">
-                                <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                <i class="fas fa-sign-out-alt me-2"></i> تسجيل الخروج
                             </button>
                         </form>
                     </li>
