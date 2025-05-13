@@ -13,6 +13,11 @@ class AdminController extends Controller
 {
     public function loginAdminPage()
     {
+        //في حالة كان مسجل الدخول مايروح لصفحة تسجيل الدخول
+        if (auth('admin')->check()) {
+        return redirect()->route('contents.index');
+         }
+         //اذا كان مو مسجل رجعله الصفحة
         return view('auth.adminLogin');
     }
     public function regiser (RegisterAdminRequest $request){
@@ -50,7 +55,12 @@ class AdminController extends Controller
         session(['admin_token' => $token]);
 
         // 4. Redirect to dashboard
+        
         return redirect()->route('contents.index')->with('token', $token);
+        // return [
+        //     'admin' => $admin,
+        //     'token' => $token
+        // ];
     }   
 
     public function logout(Request $request)
