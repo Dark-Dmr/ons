@@ -61,7 +61,7 @@ public function convert(Request $request)
         }
 
         // Convert plain text into an array of lines
-        $lines = array_filter(array_map('trim', explode("\n", $text)));
+        $lines = explode("\n", $text); // Keeps blank lines!
 
         // Encode the text as JSON
         $jsonContent = json_encode($lines, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);

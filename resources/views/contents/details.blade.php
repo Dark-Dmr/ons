@@ -13,8 +13,17 @@
         <div id="view-mode">
             <h3>{{ $contents->tittle }}</h3>
             <hr>
-            <div class="mb-4">
-                {!! nl2br(e($contents->text)) !!}
+
+            <div class="mb-4 bg-light p-3 rounded text-start" dir="ltr" style="white-space: pre-wrap; font-family: inherit;">
+                @php
+                    $lines = json_decode($contents->text, true);
+                @endphp
+
+                @if(is_array($lines))
+                    {{ implode("\n", $lines) }}
+                @else
+                    {!! nl2br(e($contents->text)) !!}
+                @endif
             </div>
 
             <div class="d-flex gap-2">
@@ -22,7 +31,6 @@
                     <i class="fas fa-edit me-2"></i> تعديل
                 </button>
 
-                <!-- زر الحذف يفتح المودال -->
                 <form id="deleteForm" action="{{ route('content.delete', $contents->id) }}" method="POST">
                     @csrf
                     @method('DELETE')
@@ -46,7 +54,11 @@
 
                 <div class="mb-3">
                     <label class="form-label">النص</label>
-                    <textarea name="text" class="form-control" rows="6" required>{{ $contents->text }}</textarea>
+                    <textarea name="text" class="form-control" rows="10" required>@if(is_array(json_decode($contents->text, true)))
+{{ implode("\n", json_decode($contents->text, true)) }}
+@else
+{{ $contents->text }}
+@endif</textarea>
                 </div>
 
                 <div class="d-flex gap-2">

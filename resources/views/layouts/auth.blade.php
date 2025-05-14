@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أنس Admin - Login</title>
+    <title>أُنس Admin - Login</title>
     
     <!-- Google Fonts - Tajawal for Arabic support -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
@@ -155,7 +155,7 @@
                 <div class="login-logo">
                     <i class="fas fa-user-shield"></i>
                 </div>
-                <h2>لوحة إدارة أنس</h2>
+                <h2>لوحة إدارة أُنس</h2>
             </div>
             
             <div class="login-body">
@@ -186,7 +186,7 @@
                 </form>
                 
                 <div class="login-footer">
-                    <p class="mb-0">© 2025 أنس - جميع الحقوق محفوظة</p>
+                    <p class="mb-0">© 2025 أُنس - جميع الحقوق محفوظة</p>
                 </div>
             </div>
         </div>

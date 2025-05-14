@@ -12,27 +12,32 @@
             </button>
         </div>
     </div>
-    
+
     <div class="card-body">
         <div class="list-group">
             @foreach($contents as $content)
-            <a href="{{ route('content.details', $content->id) }}" class="list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ $content->tittle ?? 'بدون عنوان' }}</h5>
-                    @if($content->created_at)
-                        <small>{{ $content->created_at->diffForHumans() }}</small>
-                    @else
-                        <small>لا يوجد تاريخ</small>
-                    @endif
-                </div>
-                <p class="mb-1">{{ Str::limit($content->text ?? 'لا يوجد محتوى', 100) }}</p>
-            </a>
+                @php
+                    $decoded = json_decode($content->text, true);
+                    $previewText = is_array($decoded)
+                        ? implode(' ', array_slice($decoded, 0, 3))
+                        : Str::limit($content->text, 100);
+                @endphp
+
+                <a href="{{ route('content.details', $content->id) }}" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ $content->tittle ?? 'بدون عنوان' }}</h5>
+                        <small>{{ $content->created_at?->diffForHumans() ?? 'لا يوجد تاريخ' }}</small>
+                    </div>
+                    <p class="mb-1 text-muted" dir="rtl" style="text-align: right; overflow: hidden; text-overflow: ellipsis;">
+                        {{ $previewText }}
+                    </p>
+                </a>
             @endforeach
         </div>
     </div>
 </div>
 
-<!-- نافذة خيارات الإنشاء -->
+<!-- Modal -->
 <div class="modal fade" id="createOptionsModal" tabindex="-1" aria-labelledby="createOptionsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -69,7 +74,6 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
-        // التعامل مع ضغطات بطاقات الخيارات
         $('.option-card').on('click', function() {
             $('#createOptionsModal').modal('hide');
         });

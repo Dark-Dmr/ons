@@ -1,6 +1,6 @@
 <div class="sidebar">
     <div class="sidebar-header text-center py-4">
-        <h4>أنس</h4>
+        <h4>أُنس</h4>
     </div>
     
     <ul class="nav flex-column">
