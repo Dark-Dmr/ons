@@ -19,21 +19,20 @@
                 @php
                     $decoded = json_decode($content->text, true);
 
-                    // استخراج أول فقرة قابلة للعرض من JSON
-                    $firstParagraph = '';
-                    if (is_array($decoded)) {
-                        foreach ($decoded as $item) {
-                            if (is_string($item) && trim(strip_tags($item)) !== '') {
-                                $firstParagraph = strip_tags(html_entity_decode($item));
-                                break;
-                            }
-                        }
-                    } else {
-                        $firstParagraph = strip_tags(html_entity_decode($content->text));
-                    }
+                    // استخلاص HTML من JSON
+                    $html = is_array($decoded) && isset($decoded['html']) 
+                        ? $decoded['html'] 
+                        : (is_string($decoded) ? $decoded : $content->text);
 
-                    // تحديد الطول الأقصى للمعاينة
-                    $previewText = \Illuminate\Support\Str::limit(trim($firstParagraph), 120);
+                    // إزالة <style> أو PHPWord
+                    $clean = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '', $html);
+                    $clean = str_replace('PHPWord', '', $clean);
+
+                    // إزالة جميع وسوم HTML وتحويل الكيانات
+                    $plainText = strip_tags(html_entity_decode($clean));
+
+                    // تحديد طول المعاينة
+                    $previewText = \Illuminate\Support\Str::limit(trim($plainText), 120);
                 @endphp
 
                 <a href="{{ route('content.details', $content->id) }}" class="list-group-item list-group-item-action">
@@ -86,8 +85,8 @@
 
 @push('scripts')
 <script>
-    $(document).ready(function() {
-        $('.option-card').on('click', function() {
+    $(document).ready(function () {
+        $('.option-card').on('click', function () {
             $('#createOptionsModal').modal('hide');
         });
     });
