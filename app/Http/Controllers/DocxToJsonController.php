@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Content;
 use Illuminate\Http\Request;
 use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\Writer\HTML;
+
 
 class DocxToJsonController extends Controller
 {
@@ -15,65 +17,41 @@ public function showForm(){
 
 
 
+
+
 public function convert(Request $request)
-    {
-        $request->validate([
-            'document' => 'required|mimes:docx'
-        ]);
+{
+    $request->validate([
+        'document' => 'required|mimes:docx'
+    ]);
 
-        $file = $request->file('document');
-        $docPath = $file->getRealPath(); // Use real path from temp upload
+    $file = $request->file('document');
+    $docPath = $file->getRealPath();
 
-        try {
-            $phpWord = IOFactory::load($docPath);
-        } catch (\Exception $e) {
-            return back()->withErrors(['document' => 'Failed to load Word document: ' . $e->getMessage()]);
-        }
+    try {
+        $phpWord = IOFactory::load($docPath);
+        $writer = new HTML($phpWord);
+        ob_start();
+        $writer->save('php://output');
+        $htmlContent = ob_get_clean();
 
-        $text = '';
-
-        try {
-            foreach ($phpWord->getSections() as $section) {
-                foreach ($section->getElements() as $element) {
-                    try {
-                        if ($element instanceof \PhpOffice\PhpWord\Element\Text) {
-                            $text .= $element->getText() . "\n";
-                        } elseif ($element instanceof \PhpOffice\PhpWord\Element\TextRun) {
-                            foreach ($element->getElements() as $subElement) {
-                                if ($subElement instanceof \PhpOffice\PhpWord\Element\Text) {
-                                    $text .= $subElement->getText();
-                                }
-                            }
-                            $text .= "\n";
-                        } elseif ($element instanceof \PhpOffice\PhpWord\Element\ListItem) {
-                            $text .= $element->getText() . "\n";
-                        } else {
-                            $text .= "\n"; // Leave a blank line for unsupported elements
-                        }
-                    } catch (\Throwable $e) {
-                        $text .= "\n"; // Skip individual element errors
-                        continue;
-                    }
-                }
-            }
-        } catch (\Throwable $e) {
-            return back()->withErrors(['document' => 'Error while reading content: ' . $e->getMessage()]);
-        }
-
-        // Convert plain text into an array of lines
-        $lines = explode("\n", $text); // Keeps blank lines!
-
-        // Encode the text as JSON
-        $jsonContent = json_encode($lines, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-
-        // Save as JSON text
-        $document = Content::create([
-            'tittle' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
-            'text' => $jsonContent
-        ]);
-
-        return redirect(route('contents.index'));
+        // Store HTML as string in JSON format
+        $jsonContent = json_encode($htmlContent, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    } catch (\Throwable $e) {
+        return back()->withErrors(['document' => 'Failed to process document: ' . $e->getMessage()]);
     }
+
+    Content::create([
+        'tittle' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+        'text' => $jsonContent,
+    ]);
+
+    return redirect(route('contents.index'));
+}
+
+
+
+
 
 
 }

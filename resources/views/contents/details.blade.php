@@ -7,41 +7,30 @@
     <div class="card-header bg-primary text-white">
         <h5 class="mb-0">تفاصيل المحتوى</h5>
     </div>
-    
+
     <div class="card-body">
-        <!-- وضع العرض -->
+        <!-- View Mode -->
         <div id="view-mode">
             <h3>{{ $contents->tittle }}</h3>
             <hr>
-
-            <div class="mb-4 bg-light p-3 rounded text-start" dir="ltr" style="white-space: pre-wrap; font-family: inherit;">
+            <div class="mb-4 bg-light p-3 rounded" dir="rtl" style="line-height: 1.8;">
                 @php
-                    $lines = json_decode($contents->text, true);
+                    $decoded = json_decode($contents->text, true);
                 @endphp
-
-                @if(is_array($lines))
-                    {{ implode("\n", $lines) }}
-                @else
-                    {!! nl2br(e($contents->text)) !!}
-                @endif
+                {!! is_string($decoded) ? $decoded : $contents->text !!}
             </div>
 
             <div class="d-flex gap-2">
                 <button class="btn btn-warning" onclick="toggleEdit(true)">
                     <i class="fas fa-edit me-2"></i> تعديل
                 </button>
-
-                <form id="deleteForm" action="{{ route('content.delete', $contents->id) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
-                        <i class="fas fa-trash me-2"></i> حذف
-                    </button>
-                </form>
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <i class="fas fa-trash me-2"></i> حذف
+                </button>
             </div>
         </div>
-        
-        <!-- وضع التعديل -->
+
+        <!-- Edit Mode -->
         <div id="edit-mode" style="display: none;">
             <form method="POST" action="{{ route('content.update', $contents->id) }}">
                 @csrf
@@ -54,11 +43,12 @@
 
                 <div class="mb-3">
                     <label class="form-label">النص</label>
-                    <textarea name="text" class="form-control" rows="10" required>@if(is_array(json_decode($contents->text, true)))
-{{ implode("\n", json_decode($contents->text, true)) }}
-@else
-{{ $contents->text }}
-@endif</textarea>
+                    <textarea id="richTextEditor" name="text">
+                        @php
+                            $editText = json_decode($contents->text, true);
+                            echo is_string($editText) ? $editText : $contents->text;
+                        @endphp
+                    </textarea>
                 </div>
 
                 <div class="d-flex gap-2">
@@ -71,16 +61,22 @@
                 </div>
             </form>
         </div>
+
+        <!-- Delete Form -->
+        <form method="POST" action="{{ route('content.delete', $contents->id) }}" id="deleteForm">
+            @csrf
+            @method('DELETE')
+        </form>
     </div>
 </div>
 
-<!-- مودال تأكيد الحذف -->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmDeleteModalLabel">تأكيد الحذف</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">تأكيد الحذف</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 هل أنت متأكد أنك تريد حذف هذا المحتوى؟ لا يمكن التراجع عن هذه العملية.
@@ -95,19 +91,48 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('vendor/tinymce/js/tinymce/tinymce.min.js') }}"></script>
 <script>
+    let editorInitialized = false;
+
+    function initTinyMCE() {
+        if (editorInitialized) return;
+        tinymce.init({
+            selector: '#richTextEditor',
+            height: 500,
+            language: 'ar',
+            directionality: 'rtl',
+            menubar: false,
+            plugins: 'lists link image table code directionality',
+            toolbar: 'undo redo | styles | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | ltr rtl | removeformat code',
+            content_style: `
+                body {
+                    font-family: Arial, sans-serif;
+                    font-size: 14px;
+                    direction: rtl;
+                    text-align: right;
+                    line-height: 1.8;
+                }
+            `
+        });
+        editorInitialized = true;
+    }
+
     function toggleEdit(show) {
         document.getElementById('view-mode').style.display = show ? 'none' : 'block';
         document.getElementById('edit-mode').style.display = show ? 'block' : 'none';
+        if (show) {
+            setTimeout(initTinyMCE, 100);
+        }
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-        const deleteForm = document.getElementById('deleteForm');
-
-        confirmDeleteBtn.addEventListener('click', function () {
-            deleteForm.submit();
-        });
+        const deleteBtn = document.getElementById('confirmDeleteBtn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function () {
+                document.getElementById('deleteForm').submit();
+            });
+        }
     });
 </script>
 @endpush

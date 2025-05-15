@@ -32,19 +32,18 @@ class ContentController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
+        $request->validate([
+            'tittle' => 'required|string|max:255',
+            'text' => 'required|string'
+        ]);
 
-        $content = new Content();
-        $content->tittle = $data['tittle'];
+        Content::create([
+            'tittle' => $request->tittle,
+            'text' => json_encode(['html' => $request->text], JSON_UNESCAPED_UNICODE)
+        ]);
 
-        // Encode 'text' as JSON string
-        $content->text = json_encode($data['text'], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-
-        $content->save();
-
-        session()->flash('success', 'Content created successfully');
-
-        return redirect(route('contents.index'));
+        session()->flash('success', 'تم إنشاء المحتوى بنجاح');
+        return redirect()->route('contents.index');
     }
 
     /**
@@ -69,18 +68,16 @@ class ContentController extends Controller
     public function update(Request $request, Content $content)
     {
         $data = $request->all();
+        $content->tittle = $data['tittle'];
 
-        $content->tittle = $data['tittle']; // Or 'title' if that's the correct spelling
-
-        // Encode the text as JSON
+        // Save TinyMCE HTML as JSON
         $content->text = json_encode($data['text'], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-
         $content->save();
 
         session()->flash('success', 'Content updated successfully');
-
         return redirect(route('contents.index'));
     }
+
 
 
     /**

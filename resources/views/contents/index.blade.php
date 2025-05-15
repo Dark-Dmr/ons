@@ -18,9 +18,22 @@
             @foreach($contents as $content)
                 @php
                     $decoded = json_decode($content->text, true);
-                    $previewText = is_array($decoded)
-                        ? implode(' ', array_slice($decoded, 0, 3))
-                        : Str::limit($content->text, 100);
+
+                    // استخراج أول فقرة قابلة للعرض من JSON
+                    $firstParagraph = '';
+                    if (is_array($decoded)) {
+                        foreach ($decoded as $item) {
+                            if (is_string($item) && trim(strip_tags($item)) !== '') {
+                                $firstParagraph = strip_tags(html_entity_decode($item));
+                                break;
+                            }
+                        }
+                    } else {
+                        $firstParagraph = strip_tags(html_entity_decode($content->text));
+                    }
+
+                    // تحديد الطول الأقصى للمعاينة
+                    $previewText = \Illuminate\Support\Str::limit(trim($firstParagraph), 120);
                 @endphp
 
                 <a href="{{ route('content.details', $content->id) }}" class="list-group-item list-group-item-action">
@@ -28,7 +41,7 @@
                         <h5 class="mb-1">{{ $content->tittle ?? 'بدون عنوان' }}</h5>
                         <small>{{ $content->created_at?->diffForHumans() ?? 'لا يوجد تاريخ' }}</small>
                     </div>
-                    <p class="mb-1 text-muted" dir="rtl" style="text-align: right; overflow: hidden; text-overflow: ellipsis;">
+                    <p class="mb-1 text-muted" dir="rtl" style="text-align: right;">
                         {{ $previewText }}
                     </p>
                 </a>
