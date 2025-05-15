@@ -32,19 +32,18 @@ class ContentController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'tittle' => 'required|string|max:255',
-            'text' => 'required|string'
-        ]);
+
 
         Content::create([
             'tittle' => $request->tittle,
-            'text' => json_encode(['html' => $request->text], JSON_UNESCAPED_UNICODE)
+            'text' => json_encode($request->text, JSON_UNESCAPED_UNICODE)
         ]);
 
         session()->flash('success', 'تم إنشاء المحتوى بنجاح');
         return redirect()->route('contents.index');
     }
+
+
 
     /**
      * Display the specified resource.

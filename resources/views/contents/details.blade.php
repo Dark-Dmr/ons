@@ -102,9 +102,10 @@
             height: 500,
             language: 'ar',
             directionality: 'rtl',
+            branding: false,
             menubar: false,
             plugins: 'lists link image table code directionality',
-            toolbar: 'undo redo | styles | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | ltr rtl | removeformat code',
+            toolbar: 'undo redo | styles | bold italic underline | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | ltr rtl | removeformat code',
             content_style: `
                 body {
                     font-family: Arial, sans-serif;
