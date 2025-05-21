@@ -173,7 +173,7 @@
                     </div>
                     
                     <div class="form-floating mb-4">
-                        <input type="password" class="form-control" id="password" name="password" placeholder="كلمة المرور" required>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="كلمة المرور" oncopy="return false;"   onpaste="return false;"  oncut="return false;" required>
                         <label for="password"><i class="fas fa-lock me-2"></i> كلمة المرور</label>
                     </div>
                     
