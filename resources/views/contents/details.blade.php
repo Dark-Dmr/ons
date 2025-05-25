@@ -11,7 +11,7 @@
     <div class="card-body">
         <!-- View Mode -->
         <div id="view-mode">
-            <h3>{{ $contents->tittle }}</h3>
+            <h3>{{ $contents->title }}</h3>
             <hr>
             <div class="mb-4 bg-light p-3 rounded" dir="rtl" style="line-height: 1.8;">
                 @php
@@ -38,7 +38,7 @@
 
                 <div class="mb-3">
                     <label class="form-label">العنوان</label>
-                    <input type="text" name="tittle" value="{{ $contents->tittle }}" class="form-control" required>
+                    <input type="text" name="title" value="{{ $contents->title }}" class="form-control" required>
                 </div>
 
                 <div class="mb-3">

@@ -35,7 +35,7 @@ class ContentController extends Controller
 
 
         Content::create([
-            'tittle' => $request->tittle,
+            'title' => $request->title,
             'text' => json_encode($request->text, JSON_UNESCAPED_UNICODE)
         ]);
 
@@ -67,7 +67,7 @@ class ContentController extends Controller
     public function update(Request $request, Content $content)
     {
         $data = $request->all();
-        $content->tittle = $data['tittle'];
+        $content->title = $data['title'];
 
         // Save TinyMCE HTML as JSON
         $content->text = json_encode($data['text'], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);

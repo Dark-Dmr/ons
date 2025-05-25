@@ -42,7 +42,7 @@ public function convert(Request $request)
     }
 
     Content::create([
-        'tittle' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+        'title' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
         'text' => $jsonContent,
     ]);
 
