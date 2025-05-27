@@ -11,10 +11,20 @@ class ContentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function viewiIndex()
     {
         $content = Content::all();
         return view('contents.index')->with('contents', $content);
+    }
+
+    public function index()
+    {
+        $contents = Content::all();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $contents
+        ]);
     }
 
     /**
@@ -48,9 +58,16 @@ class ContentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Content $content)
+    public function show(Content $id)
     {
-        //
+        $content = Content::find($id);
+
+    if (!$content) {
+        return response()->json(['message' => 'Content not found'], 404);
+    }
+
+    return response()->json(['contents' => $content]);
+
     }
 
     /**

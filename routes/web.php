@@ -33,7 +33,7 @@ Route::post('/admin/logout', [AdminController::class, 'logout'])->name('logout.a
 Route::group(['middleware' => ['auth:admin']], function () {
 
     //contents
-    Route::get('/contents/index',[ContentController::class, 'index'])->name('contents.index');
+    Route::get('/contents/index',[ContentController::class, 'viewiIndex'])->name('contents.index');
     Route::get('/contents/create', [ContentController::class, 'create'])->name('contents.create');
     Route::post('store-content', [ContentController::class, 'store'])->name('store.content');
     Route::get('/contents/details/{content}', [ContentController::class, 'details'])->name('content.details');

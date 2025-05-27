@@ -12,9 +12,11 @@ Route::get('/user', function (Request $request) {
 
 
 Route::post('register',[AdminController::class, 'regiser']);
-Route::get('/contents/index',[ContentController::class, 'index'])->name('contents.index');
-Route::get('/contents/details/{content}', [ContentController::class, 'details'])->name('content.details');
 
+
+
+Route::get('/contents/index',[ContentController::class, 'index']);
+Route::get('/contents/{id}', [ContentController::class, 'show']);
 // جربتها في الاي بي اي بس حطيتها في الويب لأن الاكسيس بيكون من صفحة بليد
 // Route::post('login',[AdminController::class, 'login']);
 // Route::post('logout',[AdminController::class, 'logout']);
