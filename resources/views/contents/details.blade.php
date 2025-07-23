@@ -11,16 +11,17 @@
     <div class="card-body">
         <!-- View Mode -->
         <div id="view-mode">
-            <h3>{{ $contents->title }}</h3>
+            <h3>{{ $content->title }}</h3>
+            <p><strong>التصنيف:</strong> {{ $content->category?->name ?? 'غير محدد' }}</p>
             <hr>
             <div class="mb-4 bg-light p-3 rounded" dir="rtl" style="line-height: 1.8;">
                 @php
-                    $decoded = json_decode($contents->text, true);
+                    $decoded = json_decode($content->text, true);
                 @endphp
-                {!! is_string($decoded) ? $decoded : $contents->text !!}
+                {!! is_string($decoded) ? $decoded : $content->text !!}
             </div>
 
-            <div class="d-flex gap-2">
+            <div class="d-flex justify-content-end gap-2">
                 <button class="btn btn-warning" onclick="toggleEdit(true)">
                     <i class="fas fa-edit me-2"></i> تعديل
                 </button>
@@ -32,21 +33,32 @@
 
         <!-- Edit Mode -->
         <div id="edit-mode" style="display: none;">
-            <form method="POST" action="{{ route('content.update', $contents->id) }}">
+            <form method="POST" action="{{ route('contents.update', $content->id) }}">
                 @csrf
                 @method('PUT')
 
                 <div class="mb-3">
-                    <label class="form-label">العنوان</label>
-                    <input type="text" name="title" value="{{ $contents->title }}" class="form-control" required>
-                </div>
+        <label class="form-label">العنوان</label>
+        <input type="text" name="title" value="{{ $content->title }}" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">التصنيف</label>
+            <select name="category_id" class="form-select" required>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}" {{ $content->category_id == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
 
                 <div class="mb-3">
                     <label class="form-label">النص</label>
                     <textarea id="richTextEditor" name="text">
                         @php
-                            $editText = json_decode($contents->text, true);
-                            echo is_string($editText) ? $editText : $contents->text;
+                            $editText = json_decode($content->text, true);
+                            echo is_string($editText) ? $editText : $content->text;
                         @endphp
                     </textarea>
                 </div>
@@ -63,7 +75,7 @@
         </div>
 
         <!-- Delete Form -->
-        <form method="POST" action="{{ route('content.delete', $contents->id) }}" id="deleteForm">
+        <form method="POST" action="{{ route('contents.delete', $content->id) }}" id="deleteForm">
             @csrf
             @method('DELETE')
         </form>

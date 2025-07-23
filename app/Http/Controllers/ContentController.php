@@ -34,7 +34,9 @@ class ContentController extends Controller
     {
         // $categories = Category::all();
         // return view('contents.create')->with('categories', $categories);
-        return view('contents.create');
+        // return view('contents.create');
+        $categories = Category::all();
+        return view('contents.create', compact('categories'));
     }
 
     /**
@@ -42,33 +44,35 @@ class ContentController extends Controller
      */
     public function store(Request $request)
     {
-
-
-        Content::create([
-            'title' => $request->title,
-            'text' => json_encode($request->text, JSON_UNESCAPED_UNICODE)
+        $request->validate([
+            'title' => 'required|string',
+            'text' => 'required|string',
+            'category_id' => 'required|exists:categories,id',  // Validate category_id
         ]);
 
-        session()->flash('success', 'تم إنشاء المحتوى بنجاح');
-        return redirect()->route('contents.index');
+        $data = $request->only(['title', 'text', 'category_id']); // explicitly get these fields
+        $data['text'] = json_encode($data['text'], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+        Content::create($data);
+
+        return redirect()->route('contents.index')->with('success', 'Content created successfully.');
     }
+
+
+
 
 
 
     /**
      * Display the specified resource.
      */
-    public function show(Content $id)
+    public function show(Content $content)
     {
-        $content = Content::find($id);
+        $categories = Category::all();  // fetch all categories
 
-    if (!$content) {
-        return response()->json(['message' => 'Content not found'], 404);
+        return view('contents.details', compact('content', 'categories'));
     }
 
-    return response()->json(['contents' => $content]);
-
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -83,9 +87,14 @@ class ContentController extends Controller
      */
     public function update(Request $request, Content $content)
     {
+        $request->validate([
+        'title' => 'required|string',
+        'text' => 'required|string', // or string if it's not JSON yet
+        'category_id' => 'required|exists:categories,id',
+    ]);
         $data = $request->all();
         $content->title = $data['title'];
-
+        $content->category_id = $data['category_id'];
         // Save TinyMCE HTML as JSON
         $content->text = json_encode($data['text'], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         $content->save();
@@ -108,14 +117,9 @@ class ContentController extends Controller
 
 
     public function details(Content $content) {
-        // $categories = Category::all();
-    
-        // return view('contents.details', [
-        //     'contents' => $content,
-        //     // 'categories' => $categories,
-        // ]);
+        $categories = Category::all();  // fetch all categories
 
-         return view('contents.details')->with('contents', $content);
+        return view('contents.details', compact('content', 'categories'));
 
     }
     

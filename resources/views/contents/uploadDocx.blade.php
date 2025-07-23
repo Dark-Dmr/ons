@@ -43,6 +43,18 @@
                     <form action="{{ route('upload.convert') }}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                         @csrf
 
+                        {{-- اختر التصنيف --}}
+                        <div class="mb-4">
+                            <label for="category_id" class="form-label fw-bold">اختر التصنيف:</label>
+                            <select name="category_id" id="category_id" class="form-select" required>
+                                <option value="" selected disabled>اختر التصنيف</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                            <div class="invalid-feedback text-start mt-1">يرجى اختيار التصنيف</div>
+                        </div>
+
                         <div class="mb-4">
                             <label for="documentUpload" class="form-label fw-bold">اختر الملف:</label>
                             <input type="file" class="form-control" id="documentUpload" name="document" accept=".doc,.docx" required>

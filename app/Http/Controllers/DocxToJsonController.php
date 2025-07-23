@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Content;
 use Illuminate\Http\Request;
 use PhpOffice\PhpWord\IOFactory;
@@ -12,7 +13,8 @@ class DocxToJsonController extends Controller
 {
 
 public function showForm(){
-    return view('contents.uploadDocx');
+    $categories = Category::all();
+    return view('contents.uploadDocx', compact('categories'));
 }
 
 
@@ -22,7 +24,8 @@ public function showForm(){
 public function convert(Request $request)
 {
     $request->validate([
-        'document' => 'required|mimes:docx'
+    'document' => 'required|mimes:doc,docx',
+    'category_id' => 'required|exists:categories,id',
     ]);
 
     $file = $request->file('document');
@@ -42,10 +45,10 @@ public function convert(Request $request)
     }
 
     Content::create([
-        'title' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
-        'text' => $jsonContent,
+    'title' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+    'text' => $jsonContent,
+    'category_id' => $request->category_id,
     ]);
-
     return redirect(route('contents.index'));
 }
 

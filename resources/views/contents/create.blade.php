@@ -9,13 +9,34 @@
     </div>
 
     <div class="card-body">
-        <form action="{{ route('store.content') }}" method="POST" id="contentForm">
-            @csrf
-
-            <div class="mb-3">
-                <label for="title" class="form-label">عنوان المحتوى</label>
-                <input type="text" class="form-control" id="title" name="title" required>
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
+        @endif
+        <form action="{{ route('contents.store') }}" method="POST" id="contentForm">
+        @csrf
+        <div class="mb-3">
+            <label for="title" class="form-label">عنوان المحتوى</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="category_id" class="form-label">التصنيف</label>
+            <select name="category_id" id="category_id" class="form-select" required>
+    <option value="">اختر تصنيفًا</option>
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                {{ $category->name }}
+            </option>
+        @endforeach
+    </select>
+        </div>
+
 
             <div class="mb-3">
                 <label for="text" class="form-label">نص المحتوى</label>
@@ -26,9 +47,10 @@
             </div>
 
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button type="submit" class="btn btn-primary">
+                {{-- <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save me-2"></i> حفظ المحتوى
-                </button>
+                </button> --}}
+                <button type="submit" class="btn btn-primary">حفظ المحتوى</button>
             </div>
         </form>
     </div>

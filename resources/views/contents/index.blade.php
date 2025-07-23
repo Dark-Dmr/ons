@@ -35,7 +35,7 @@
                     $previewText = \Illuminate\Support\Str::limit(trim($plainText), 120);
                 @endphp
 
-                <a href="{{ route('content.details', $content->id) }}" class="list-group-item list-group-item-action">
+                <a href="{{ route('contents.details', $content->id) }}" class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">{{ $content->title ?? 'بدون عنوان' }}</h5>
                         <small>{{ $content->created_at?->diffForHumans() ?? 'لا يوجد تاريخ' }}</small>

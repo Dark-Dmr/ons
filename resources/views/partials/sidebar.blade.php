@@ -9,6 +9,13 @@
                 <i class="fas fa-book me-2"></i> المحتويات
             </a>
         </li>
+
+        <li class="nav-item">
+            <a href="{{ route('categories.index') }}" class="nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }}">
+                <i class="fas fa-list me-2"></i> التصنيفات
+            </a>
+        </li>
+
         <li class="nav-item">
             <form action="{{ route('logout.admin') }}" method="POST">
                 @csrf
